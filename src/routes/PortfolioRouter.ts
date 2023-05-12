@@ -1,6 +1,6 @@
-import express, { NextFunction, Request, Response } from "express"
+import express, { Request, Response } from "express"
 import dayjs from "dayjs"
-import statusMessage from "../utils/StatusMsg"
+import responseMessage from "../utils/ResponseMessage"
 const portfolioRouter = express.Router()
 const portfolioService = require("../services/portfolioService")
 
@@ -9,9 +9,9 @@ portfolioRouter
     .get((req: Request, res: Response) => {
         const knexInstance = req.app.get("db")
         portfolioService.getPortfolioItems(knexInstance).then((portfolioItems: PortfolioTypes[]) => {
-            res.status(200).send(statusMessage(true, portfolioItems, null))
+            res.status(200).send(responseMessage(true, portfolioItems, null))
         }).catch((err: Error) => {
-            res.status(200).send(statusMessage(false, null, err))
+            res.status(200).send(responseMessage(false, null, err))
         })
     })
 
@@ -24,12 +24,12 @@ portfolioRouter
             const modified = dayjs().format()
             const portfolioItem = { id, deleted, modified, img_url, title, text, order }
             portfolioService.updatePortfolioItem(knexInstance, portfolioItem).then((updatedPortfolioItem: PortfolioTypes) => {
-                res.status(200).send(statusMessage(true, updatedPortfolioItem, null))
+                res.status(200).send(responseMessage(true, updatedPortfolioItem, null))
             }).catch((err: Error) => {
-                res.status(200).send(statusMessage(false, null, err))
+                res.status(400).send(responseMessage(false, null, err))
             })
         } catch (err) {
-            res.status(200).send(statusMessage(false, null, err))
+            res.status(400).send(responseMessage(false, null, err))
         }
     })
 
@@ -44,13 +44,13 @@ portfolioRouter
             const modified = null
             const portfolioItem = { created, deleted, modified, img_url, title, text, order }
             portfolioService.postPortfolioItem(knexInstance, portfolioItem).then((newPortfolioItem: PortfolioTypes) => {
-                res.status(200).send(statusMessage(true, newPortfolioItem, null))
+                res.status(200).send(responseMessage(true, newPortfolioItem, null))
             }).catch((err: Error) => {
-                res.status(200).send(statusMessage(false, null, err))
+                res.status(400).send(responseMessage(false, null, err))
             })
         } catch (err) {
             console.log(err)
-            res.status(200).send(statusMessage(false, null, err))
+            res.status(400).send(responseMessage(false, null, err))
         }
     })
 
