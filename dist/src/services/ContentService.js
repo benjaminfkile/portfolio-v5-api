@@ -11,6 +11,7 @@ const contentService = {
     getPortfolioItems(knex) {
         return knex.from("portfolio_items")
             .select("*")
+            .orderBy("order", "asc")
             .then((rows) => {
             return rows;
         });
@@ -18,6 +19,7 @@ const contentService = {
     getSkillItems(knex) {
         return knex.from("skill_items")
             .select("*")
+            .orderBy("order", "asc")
             .then((rows) => {
             return rows;
         });
@@ -25,6 +27,7 @@ const contentService = {
     getTimelineItems(knex) {
         return knex.from("timeline_items")
             .select("*")
+            .orderBy("order", "asc")
             .then((rows) => {
             return rows;
         });
