@@ -4,7 +4,7 @@ const mediaService = {
 
         const chunkSize = process.env.STREAM_CHUNK_SIZE ? parseInt(process.env.STREAM_CHUNK_SIZE) : 999999
         const range = byteRange ? byteRange : `${0}-${chunkSize}`
-        const params = { Bucket: process.env.AWS_BUCKET_NAME, Key: key, Range: `bytes=${range}` }
+        const params = { Bucket: process.env.S3_BUCKET_NAME, Key: key, Range: `bytes=${range}` }
         s3.getObject(params, (err: any, data: any) => {
             if (!err) {
                 io.to(socketId).emit("receive-file-chunks", data)
