@@ -7,22 +7,24 @@ const dotenv = require("dotenv")
 dotenv.config()
 const app = require("./src/app")
 const server = require("http").createServer({}, app)
-const io = require("socket.io").listen(server)
 const aws = require('aws-sdk')
-const ss = require("./src/services/SocketService")
+const knex =require("knex")
 
 const s3 = new aws.S3({
   accessKeyId: process.env.AWS_ACCESSKEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 })
 
+const db = knex({
+  client: "pg",
+  connection: {
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
+  }
+})
+
 app.set("s3", s3)
-
-app.set("io", io)
-
-ss.init(io)
-
-const bucket = "ben-kile-portfolio-bucket"
+app.set("db", db)
 
 const PORT = process.env.PORT
 
