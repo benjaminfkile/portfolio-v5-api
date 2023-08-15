@@ -4,7 +4,7 @@ const cors = require("cors")
 const helmet = require("helmet")
 const NODE_ENV = process.env.NODE_ENV
 const app: Express = express()
-const streamRouter = require("./routers/streamRouter")
+const mediaRouter = require("./routers/mediaRouter")
 const contentRouter = require("./routers/ContentRouter")
 
 const morganOption = (NODE_ENV === "production")
@@ -19,7 +19,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send(":)")
 })
 
-app.use("/api/stream", streamRouter)
+app.use("/api/media", mediaRouter)
 app.use("/api/portfolio-content", contentRouter)
 
 app.use(function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {

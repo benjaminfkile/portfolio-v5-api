@@ -9,7 +9,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const NODE_ENV = process.env.NODE_ENV;
 const app = (0, express_1.default)();
-const streamRouter = require("./routers/streamRouter");
+const mediaRouter = require("./routers/mediaRouter");
 const contentRouter = require("./routers/ContentRouter");
 const morganOption = (NODE_ENV === "production")
     ? "tiny"
@@ -20,7 +20,7 @@ app.use(helmet());
 app.get("/", (req, res) => {
     res.send(":)");
 });
-app.use("/api/stream", streamRouter);
+app.use("/api/media", mediaRouter);
 app.use("/api/portfolio-content", contentRouter);
 app.use(function errorHandler(err, req, res, next) {
     if (res.headersSent) {
@@ -29,4 +29,4 @@ app.use(function errorHandler(err, req, res, next) {
     res.status(500);
     res.render('error', { error: err });
 });
-module.exports = app;
+module.exports = app; //bump

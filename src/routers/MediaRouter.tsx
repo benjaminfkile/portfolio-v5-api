@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express"
 import createAWSStream from "../stream/createAWSStream"
-const streamRouter = express.Router()
+const mediaRouter = express.Router()
 
-streamRouter
+mediaRouter
     .route("/")
     .get(async (req: Request, res: Response) => {
         try {
@@ -13,4 +13,4 @@ streamRouter
             res.status(200).send({ err: err })
         }
     })
-module.exports = streamRouter
+module.exports = mediaRouter
