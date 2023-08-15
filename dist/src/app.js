@@ -10,7 +10,7 @@ const helmet = require("helmet");
 const NODE_ENV = process.env.NODE_ENV;
 const app = (0, express_1.default)();
 const mediaRouter = require("./routers/mediaRouter");
-const contentRouter = require("./routers/ContentRouter");
+const contentRouter = require("./routers/contentRouter");
 const morganOption = (NODE_ENV === "production")
     ? "tiny"
     : "common";
