@@ -9,4 +9,5 @@ type PortfolioItemTypes = {
     repo: string | null
     media_type: number
     playbackRate: number
+    transform_value: string
 }
