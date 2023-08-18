@@ -17,12 +17,12 @@ const contentService = {
         });
     },
     getSkillItems(knex) {
-        return knex.from("skill_items")
-            .select("*")
-            .orderBy("order", "asc")
-            .then((rows) => {
-            return rows;
-        });
+        return knex.raw(`
+        SELECT si.*, ti.icon_source
+        FROM skill_items si
+        JOIN tech_icons ti ON si.icon_id = ti.icon_id
+        ORDER BY si."order";
+        `);
     },
     getTimelineItems(knex) {
         return knex.from("timeline_items")
