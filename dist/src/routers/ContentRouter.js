@@ -13,11 +13,11 @@ contentRouter
         let content = { about: "", portfolioItems: [], skillItems: [], timelineItems: [] };
         const db = req.app.get("db");
         contentService.getAbout(db).then((about) => {
-            // content.about = about.text
+            content.about = about.text;
         }).then(() => {
             contentService.getPortfolioItems(db)
                 .then((portfolioItems) => {
-                // content.portfolioItems = portfolioItems
+                content.portfolioItems = portfolioItems;
             }).then(() => {
                 contentService.getSkillItems(db)
                     .then((skillItems) => {
@@ -25,7 +25,7 @@ contentRouter
                 }).then(() => {
                     contentService.getTimelineItems(db)
                         .then((timelineItems) => {
-                        // content.timelineItems = timelineItems
+                        content.timelineItems = timelineItems;
                         res.send({ content: content, error: null });
                     }).catch((err) => {
                         res.status(200).send(err);
