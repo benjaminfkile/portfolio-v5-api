@@ -22,9 +22,8 @@ const contentService = {
         FROM skill_items si
         JOIN tech_icons ti ON si.icon_id = ti.icon_id
         ORDER BY si."order";
-        `).then((rows: SkillItemTypes[]) => {
-            //@ts-ignore
-            return rows.rows
+        `).then((queryData: RawSQLTypes) => {
+            return queryData.rows
         })
     },
     getTimelineItems(knex: Knex) {
