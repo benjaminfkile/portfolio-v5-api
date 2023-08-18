@@ -10,4 +10,5 @@ type PortfolioItemTypes = {
     media_type: number
     playbackRate: number
     transform_value: string
+    tech_icon_arry: string[]
 }

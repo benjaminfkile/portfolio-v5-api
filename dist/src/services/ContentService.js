@@ -9,11 +9,14 @@ const contentService = {
         });
     },
     getPortfolioItems(knex) {
-        return knex.from("portfolio_items")
-            .select("*")
-            .orderBy("order", "asc")
-            .then((rows) => {
-            return rows;
+        return knex.raw(`
+        SELECT pi.title, pi.intro, pi.description, pi.file_name, pi.url, pi.repo, pi.media_type, pi.playback_rate, pi.transform_value, array_agg(ti.icon_source) AS icon_sources
+        FROM portfolio_items pi
+        JOIN tech_icons ti ON ti.icon_id = ANY(pi.tech_icons)
+        GROUP BY pi.id      
+        ORDER BY pi."order";         
+        `).then((queryData) => {
+            return queryData.rows;
         });
     },
     getSkillItems(knex) {
