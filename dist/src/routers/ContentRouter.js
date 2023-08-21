@@ -26,22 +26,22 @@ contentRouter
                     contentService.getTimelineItems(db)
                         .then((timelineItems) => {
                         content.timelineItems = timelineItems;
-                        res.send({ content: content, error: null });
-                    }).catch((err) => {
-                        res.status(200).send(err);
+                        res.send({ content: content, error: false, errorMsg: {} });
+                    }).catch((error) => {
+                        res.send({ content: null, error: true, errorMsg: error });
                     });
-                }).catch((err) => {
-                    res.status(200).send(err);
+                }).catch((error) => {
+                    res.send({ content: null, error: true, errorMsg: error });
                 });
-            }).catch((err) => {
-                res.status(200).send(err);
+            }).catch((error) => {
+                res.send({ content: null, error: true, errorMsg: error });
             });
-        }).catch((err) => {
-            res.status(200).send(err);
+        }).catch((error) => {
+            res.send({ content: null, error: true, errorMsg: error });
         });
     }
     catch (error) {
-        res.send({ content: null, error: error });
+        res.send({ content: null, error: true, errorMsg: error });
     }
 });
 module.exports = contentRouter;
