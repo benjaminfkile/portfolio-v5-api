@@ -26,7 +26,7 @@ const db = knex({
 app.set("s3", s3)
 app.set("db", db)
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 8000
 
 server.listen(PORT, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`)
