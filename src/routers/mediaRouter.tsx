@@ -1,35 +1,67 @@
-import express, { Request, Response } from "express"
-import createAWSStream from "../stream/createAWSStream"
-import path from "path"
+import express from "express"
+import * as AWS from "aws-sdk"
+import mime from "mime-types"
 
 const mediaRouter = express.Router()
-
-mediaRouter.route("/").get(async (req: Request, res: Response) => {
-  try {
-    const key: any = req.query.key
-
-    const ext = path.extname(key).toLowerCase()
-    const contentTypeMap: Record<string, string> = {
-      ".mp4": "video/mp4",
-      ".jpg": "image/jpeg",
-      ".jpeg": "image/jpeg",
-      ".png": "image/png",
-      ".gif": "image/gif",
-      ".webp": "image/webp"
-    }
-    const contentType = contentTypeMap[ext] || "application/octet-stream"
-
-    res.setHeader("Access-Control-Allow-Origin", "*")
-    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin")
-    res.setHeader("Content-Type", contentType)
-    res.setHeader("Accept-Ranges", "bytes")
-
-    const stream = await createAWSStream(key)
-    stream.pipe(res)
-  } catch (err) {
-    res.status(500).send({ error: "Failed to load media", details: err })
-  }
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 })
 
+mediaRouter.get("/", async (req, res) => {
+  const key = req.query.key as string
+  const range = req.headers.range
+  const contentType = mime.lookup(key) || "application/octet-stream"
+
+  if (!key) return res.status(400).send("Missing key")
+
+  const params: AWS.S3.GetObjectRequest = {
+    Bucket: process.env.S3_BUCKET_NAME!,
+    Key: key
+  }
+
+  try {
+    const head = await s3.headObject(params).promise()
+    const fileSize = head.ContentLength!
+
+    if (range) {
+      const [startStr, endStr] = range.replace(/bytes=/, "").split("-")
+      const start = parseInt(startStr, 10)
+      const end = endStr ? parseInt(endStr, 10) : fileSize - 1
+      const chunkSize = end - start + 1
+
+      const stream = s3.getObject({
+        ...params,
+        Range: `bytes=${start}-${end}`
+      }).createReadStream()
+
+      res.writeHead(206, {
+        "Content-Range": `bytes ${start}-${end}/${fileSize}`,
+        "Accept-Ranges": "bytes",
+        "Content-Length": chunkSize,
+        "Content-Type": contentType,
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin"
+      })
+
+      stream.pipe(res)
+    } else {
+      const stream = s3.getObject(params).createReadStream()
+
+      res.writeHead(200, {
+        "Content-Length": fileSize,
+        "Content-Type": contentType,
+        "Accept-Ranges": "bytes",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin"
+      })
+
+      stream.pipe(res)
+    }
+  } catch (err) {
+    console.error(err)
+    res.status(500).send("Error streaming file")
+  }
+})
 
 module.exports = mediaRouter
