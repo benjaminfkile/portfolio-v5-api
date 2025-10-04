@@ -1,8 +1,9 @@
 import { Knex } from "knex"
+import { IRawSQL, ITimelineItem } from "../interfaces"
 
-const contentService = {
-    getAbout(knex: Knex) {
-        return knex.from("about")
+const content = {
+    getAbout(db: Knex) {
+        return db.from("about")
             .select("*")
             .then((rows: string[]) => {
                 return rows[0]
@@ -15,7 +16,7 @@ const contentService = {
         JOIN tech_icons ti ON ti.icon_id = ANY(pi.tech_icons)
         GROUP BY pi.id      
         ORDER BY pi."order";         
-        `).then((queryData: RawSQLTypes) => {
+        `).then((queryData: IRawSQL) => {
             return queryData.rows
         })
     },
@@ -25,7 +26,7 @@ const contentService = {
         FROM skill_items si
         JOIN tech_icons ti ON si.icon_id = ti.icon_id
         ORDER BY si."order";
-        `).then((queryData: RawSQLTypes) => {
+        `).then((queryData: IRawSQL) => {
             return queryData.rows
         })
     },
@@ -33,9 +34,9 @@ const contentService = {
         return knex.from("timeline_items")
             .select("*")
             .orderBy("order", "asc")
-            .then((rows: TimelineItemTypes[]) => {
+            .then((rows: ITimelineItem[]) => {
                 return rows
             })
     }
 }
-module.exports = contentService
+export default content

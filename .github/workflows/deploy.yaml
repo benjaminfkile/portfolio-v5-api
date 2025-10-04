@@ -31,11 +31,11 @@ jobs:
 
           docker buildx build \
             --platform linux/amd64 \
-            --build-arg AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
-            --build-arg AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-            --build-arg AWS_REGION=$AWS_REGION \
-            --build-arg DATABASE_URL=$DATABASE_URL \
-            --build-arg S3_BUCKET_NAME=$S3_BUCKET_NAME \
+            --build-arg AWS_REGION=${{ secrets.AWS_REGION }} \
+            --build-arg AWS_SECRET_ARN=${{ secrets.AWS_SECRET_ARN }} \
+            --build-arg NODE_ENVIRONMENT=${{ secrets.NODE_ENVIRONMENT }} \
             -t $IMAGE_URI:$GIT_SHA \
             -t $IMAGE_URI:latest \
             --push .
+
+

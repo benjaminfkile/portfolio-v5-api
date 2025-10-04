@@ -4,29 +4,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const morgan = require("morgan");
-const cors = require("cors");
-const helmet = require("helmet");
-const NODE_ENV = process.env.NODE_ENV;
+const morgan_1 = __importDefault(require("morgan"));
+const cors_1 = __importDefault(require("cors"));
+const helmet_1 = __importDefault(require("helmet"));
+const contentRouter_1 = __importDefault(require("./routers/contentRouter"));
 const app = (0, express_1.default)();
-const mediaRouter = require("./routers/mediaRouter");
-const contentRouter = require("./routers/contentRouter");
-const morganOption = (NODE_ENV === "production")
-    ? "tiny"
-    : "common";
-app.use(morgan(morganOption));
-app.use(cors());
-app.use(helmet());
+app.use((0, morgan_1.default)("common"));
+app.use((0, cors_1.default)());
+app.use((0, helmet_1.default)());
 app.get("/", (req, res) => {
-    res.send(":)");
+    res.send("portfolio-api");
 });
-app.use("/api/media", mediaRouter);
-app.use("/api/portfolio-content", contentRouter);
+app.use("/api/portfolio-content", contentRouter_1.default);
 app.use(function errorHandler(err, req, res, next) {
     if (res.headersSent) {
         return next(err);
     }
     res.status(500);
-    res.render('error', { error: err });
+    res.render("error", { error: err });
 });
-module.exports = app; //bump
+exports.default = app;

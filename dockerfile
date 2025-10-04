@@ -25,19 +25,15 @@ RUN npm ci --omit=dev
 # Copy compiled JS
 COPY --from=builder /app/dist ./dist
 
-# ---- Accept secrets as build args ----
-ARG AWS_ACCESS_KEY_ID
-ARG AWS_SECRET_ACCESS_KEY
+# ---- Accept required build args ----
 ARG AWS_REGION
-ARG DATABASE_URL
-ARG S3_BUCKET_NAME
+ARG AWS_SECRET_ARN
+ARG NODE_ENVIRONMENT
 
-# ---- Set them as runtime env vars ----
-ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+# ---- Expose them as runtime env vars ----
 ENV AWS_REGION=$AWS_REGION
-ENV DATABASE_URL=$DATABASE_URL
-ENV S3_BUCKET_NAME=$S3_BUCKET_NAME
+ENV AWS_SECRET_ARN=$AWS_SECRET_ARN
+ENV NODE_ENVIRONMENT=$NODE_ENVIRONMENT
 
 EXPOSE 3002
 

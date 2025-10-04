@@ -1,41 +1,59 @@
+import dotenv from "dotenv";
+import http from "http";
+import { initDb } from "./src/db/db";
+import { getAppSecrets } from "./src/secrets";
+import { IAPISecrets } from "./src/interfaces";
+import app from "./src/app";
+import morgan from "morgan";
+import { TNodeEnviromnent } from "./src/types";
+
+dotenv.config();
+
 process.on("uncaughtException", function (err) {
-  console.error(err)
-  console.log("Node NOT Exiting...")
-})
+  console.error(err);
+  console.log("Node NOT Exiting...");
+});
 
-const dotenv = require("dotenv")
-dotenv.config()
-const app = require("./src/app")
-const server = require("http").createServer({}, app)
-const aws = require('aws-sdk')
-const knex =require("knex")
+async function start() {
+  try {
+    const secrets: IAPISecrets = await getAppSecrets();
+    app.set("secrets", secrets);
 
-const s3 = new aws.S3({
-  accessKeyId: process.env.AWS_ACCESSKEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-})
+    console.log(secrets)
 
-const db = knex({
-  client: "pg",
-  connection: {
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
+    const environemt = (process.env.NODE_ENVIRONMENT?.trim() ||
+      secrets.node_env ||
+      "local") as TNodeEnviromnent;
+
+    const morganOption = environemt === "production" ? "tiny" : "common";
+    app.use(morgan(morganOption));
+
+    const port = parseInt(secrets.port) || 3002;
+    const server = http.createServer({}, app);
+
+    await initDb(secrets, environemt);
+
+    process.on("SIGINT", () => {
+      server?.close(() => {
+        console.log("Server closed");
+        process.exit(0);
+      });
+    });
+
+    process.on("SIGTERM", () => {
+      server?.close(() => {
+        console.log("Server closed");
+        process.exit(0);
+      });
+    });
+
+    server.listen(port, () => {
+      console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+    });
+  } catch (err) {
+    console.error("Failed to start server:", err);
+    process.exit(1);
   }
-})
+}
 
-app.set("s3", s3)
-app.set("db", db)
-
-const PORT = process.env.PORT || 3002
-
-console.log("PORT",PORT)
-console.log("AWS_ACCESS_KEY_ID:", process.env.AWS_ACCESS_KEY_ID);
-console.log("AWS_SECRET_ACCESS_KEY:", process.env.AWS_SECRET_ACCESS_KEY);
-console.log("DATABASE_URL:", process.env.DATABASE_URL);
-console.log("S3_BUCKET_NAME:", process.env.S3_BUCKET_NAME);
-
-
-server.listen(PORT, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`)
-})
-
+start();

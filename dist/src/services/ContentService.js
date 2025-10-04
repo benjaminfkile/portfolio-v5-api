@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const contentService = {
-    getAbout(knex) {
-        return knex.from("about")
+    getAbout(db) {
+        return db.from("about")
             .select("*")
             .then((rows) => {
             return rows[0];
@@ -38,4 +38,4 @@ const contentService = {
         });
     }
 };
-module.exports = contentService;
+exports.default = contentService;
