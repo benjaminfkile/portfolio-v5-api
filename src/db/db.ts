@@ -13,7 +13,7 @@ export async function initDb(
   const { db_host, db_proxy_url, db_username, db_password, db_name, db_port } =
     secrets;
 
-  const dbUrl = environmnet === "production" ? db_host : db_proxy_url;
+  const dbUrl = environmnet === "production" ? db_proxy_url : db_host;
   
   console.log("**********************************");
   console.log("dbUrl", dbUrl);
