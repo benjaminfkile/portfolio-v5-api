@@ -10,12 +10,14 @@ const app: Express = express();
 app.use(morgan("common"));
 app.use(cors());
 
+//!! harden this!!!
 app.use(
   helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" }
+    crossOriginEmbedderPolicy: false,   
+    crossOriginOpenerPolicy: false,    
+    crossOriginResourcePolicy: { policy: "cross-origin" } 
   })
-);
-
+)
 
 app.get("/", (req: Request, res: Response) => {
   res.send("portfolio-api");
