@@ -2,7 +2,7 @@ name: Build and Deploy Portfolio API
 
 on:
   push:
-    branches: ["feature/aws-ec2-cicd "]
+    branches: ["feature/aws-ec2-cicd"]
 
 jobs:
   deploy:
