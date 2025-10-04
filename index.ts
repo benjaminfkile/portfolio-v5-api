@@ -28,6 +28,13 @@ app.set("db", db)
 
 const PORT = process.env.PORT || 3002
 
+console.log("PORT",PORT)
+console.log("AWS_ACCESS_KEY_ID:", process.env.AWS_ACCESS_KEY_ID);
+console.log("AWS_SECRET_ACCESS_KEY:", process.env.AWS_SECRET_ACCESS_KEY);
+console.log("DATABASE_URL:", process.env.DATABASE_URL);
+console.log("S3_BUCKET_NAME:", process.env.S3_BUCKET_NAME);
+
+
 server.listen(PORT, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`)
 })
