@@ -14,6 +14,7 @@ export interface IAPISecrets {
   aws_region: string;
   node_env: TNodeEnviromnent;
   port: string;
+  s3_bucket_name: string
 }
 
 export interface IContentResponse {

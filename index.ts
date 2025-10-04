@@ -19,8 +19,6 @@ async function start() {
     const secrets: IAPISecrets = await getAppSecrets();
     app.set("secrets", secrets);
 
-    console.log(secrets)
-
     const environemt = (process.env.NODE_ENVIRONMENT?.trim() ||
       secrets.node_env ||
       "local") as TNodeEnviromnent;

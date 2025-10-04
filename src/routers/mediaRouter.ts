@@ -19,10 +19,12 @@ mediaRouter.get("/", async (req, res) => {
 
   if (!key) return res.status(400).send("Missing key")
 
-  const bucket = process.env.S3_BUCKET_NAME!
-  const params = { Bucket: bucket, Key: key }
+  const secrets = req.app.get("secrets");
+  const {s3_bucket_name} = secrets
 
-  console.log(bucket)
+  const params = { Bucket: s3_bucket_name, Key: key }
+
+  console.log(s3_bucket_name)
 
   try {
     // Get object metadata (file size)

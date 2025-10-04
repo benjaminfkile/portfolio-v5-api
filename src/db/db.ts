@@ -14,10 +14,6 @@ export async function initDb(
     secrets;
 
   const dbUrl = environmnet === "production" ? db_proxy_url : db_host;
-  
-  console.log("**********************************");
-  console.log("dbUrl", dbUrl);
-  console.log("**********************************");
 
   db = knex({
     client: "pg",
