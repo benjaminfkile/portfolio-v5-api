@@ -8,8 +8,7 @@ const mediaRouter = express.Router()
 // v3 S3 client uses region and IAM role creds automatically
 const s3 = new S3Client({
   region: process.env.AWS_REGION
-  // credentials are automatically picked up from IAM role in EC2/ECS,
-  // so you don’t need to hardcode accessKeyId/secretAccessKey
+  // credentials are automatically picked up from IAM role in EC2/ECS
 })
 
 mediaRouter.get("/", async (req, res) => {
@@ -19,17 +18,21 @@ mediaRouter.get("/", async (req, res) => {
 
   if (!key) return res.status(400).send("Missing key")
 
-  const secrets = req.app.get("secrets");
-  const {s3_bucket_name} = secrets
+  const secrets = req.app.get("secrets")
+  const { s3_bucket_name } = secrets
 
   const params = { Bucket: s3_bucket_name, Key: key }
-
-  console.log(s3_bucket_name)
 
   try {
     // Get object metadata (file size)
     const head = await s3.send(new HeadObjectCommand(params))
     const fileSize = head.ContentLength!
+
+    // Common headers for all responses
+    res.set({
+      "Access-Control-Allow-Origin": "*",
+      "Cross-Origin-Resource-Policy": "cross-origin"
+    })
 
     if (range) {
       // Handle partial requests
@@ -49,9 +52,7 @@ mediaRouter.get("/", async (req, res) => {
         "Content-Range": `bytes ${start}-${end}/${fileSize}`,
         "Accept-Ranges": "bytes",
         "Content-Length": chunkSize,
-        "Content-Type": contentType,
-        "Access-Control-Allow-Origin": "*",
-        "Cross-Origin-Resource-Policy": "cross-origin"
+        "Content-Type": contentType
       })
 
       ;(getObj.Body as Readable).pipe(res)
@@ -62,9 +63,7 @@ mediaRouter.get("/", async (req, res) => {
       res.writeHead(200, {
         "Content-Length": fileSize,
         "Content-Type": contentType,
-        "Accept-Ranges": "bytes",
-        "Access-Control-Allow-Origin": "*",
-        "Cross-Origin-Resource-Policy": "cross-origin"
+        "Accept-Ranges": "bytes"
       })
 
       ;(getObj.Body as Readable).pipe(res)
