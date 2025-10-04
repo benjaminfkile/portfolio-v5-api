@@ -22,6 +22,8 @@ mediaRouter.get("/", async (req, res) => {
   const bucket = process.env.S3_BUCKET_NAME!
   const params = { Bucket: bucket, Key: key }
 
+  console.log(bucket)
+
   try {
     // Get object metadata (file size)
     const head = await s3.send(new HeadObjectCommand(params))

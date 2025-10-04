@@ -18,7 +18,8 @@ contentRouter.route("/").get(async (req: Request, res: Response) => {
       ]);
 
     const allContent: IContentResponse = {
-      about,
+      //@ts-ignore
+      about: about.text, //!! fix this
       portfolioItems,
       skillItems,
       timelineItems,

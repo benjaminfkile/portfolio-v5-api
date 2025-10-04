@@ -3,6 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 import helmet from "helmet";
 import contentRouter from "./routers/contentRouter";
+import mediaRouter from "./routers/mediaRouter";
 
 const app: Express = express();
 
@@ -15,6 +16,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/portfolio-content", contentRouter);
+app.use("/api/media", mediaRouter)
 
 app.use(function errorHandler(
   err: Error,

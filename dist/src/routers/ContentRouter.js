@@ -17,7 +17,8 @@ contentRouter.route("/").get(async (req, res) => {
             content_1.default.getTimelineItems(db),
         ]);
         const allContent = {
-            about,
+            //@ts-ignore
+            about: about.text,
             portfolioItems,
             skillItems,
             timelineItems,
