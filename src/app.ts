@@ -9,15 +9,8 @@ const app: Express = express();
 
 app.use(morgan("common"));
 app.use(cors());
-
-//!! harden this!!!
-// app.use(
-//   helmet({
-//     crossOriginEmbedderPolicy: false,   
-//     crossOriginOpenerPolicy: false,    
-//     crossOriginResourcePolicy: { policy: "cross-origin" } 
-//   })
-// )
+//!! doesnt need helmet because the gateway api that runs on the same ec2 instance this does has it
+//app.use(helmet())
 
 app.get("/", (req: Request, res: Response) => {
   res.send("portfolio-api");
