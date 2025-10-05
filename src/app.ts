@@ -1,7 +1,7 @@
 import express, { Express, NextFunction, Request, Response } from "express";
 import morgan from "morgan";
 import cors from "cors";
-import helmet from "helmet";
+//import helmet from "helmet";
 import contentRouter from "./routers/contentRouter";
 import mediaRouter from "./routers/mediaRouter";
 
@@ -11,13 +11,13 @@ app.use(morgan("common"));
 app.use(cors());
 
 //!! harden this!!!
-app.use(
-  helmet({
-    crossOriginEmbedderPolicy: false,   
-    crossOriginOpenerPolicy: false,    
-    crossOriginResourcePolicy: { policy: "cross-origin" } 
-  })
-)
+// app.use(
+//   helmet({
+//     crossOriginEmbedderPolicy: false,   
+//     crossOriginOpenerPolicy: false,    
+//     crossOriginResourcePolicy: { policy: "cross-origin" } 
+//   })
+// )
 
 app.get("/", (req: Request, res: Response) => {
   res.send("portfolio-api");
