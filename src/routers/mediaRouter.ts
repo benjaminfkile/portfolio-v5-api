@@ -5,10 +5,8 @@ import { Readable } from "stream"
 
 const mediaRouter = express.Router()
 
-// v3 S3 client uses region and IAM role creds automatically
 const s3 = new S3Client({
   region: process.env.AWS_REGION
-  // credentials are automatically picked up from IAM role in EC2/ECS
 })
 
 mediaRouter.get("/", async (req, res) => {
@@ -24,18 +22,10 @@ mediaRouter.get("/", async (req, res) => {
   const params = { Bucket: s3_bucket_name, Key: key }
 
   try {
-    // Get object metadata (file size)
     const head = await s3.send(new HeadObjectCommand(params))
     const fileSize = head.ContentLength!
 
-    // Common headers for all responses
-    res.set({
-      "Access-Control-Allow-Origin": "*",
-      "Cross-Origin-Resource-Policy": "cross-origin"
-    })
-
     if (range) {
-      // Handle partial requests
       const [startStr, endStr] = range.replace(/bytes=/, "").split("-")
       const start = parseInt(startStr, 10)
       const end = endStr ? parseInt(endStr, 10) : fileSize - 1
@@ -52,18 +42,21 @@ mediaRouter.get("/", async (req, res) => {
         "Content-Range": `bytes ${start}-${end}/${fileSize}`,
         "Accept-Ranges": "bytes",
         "Content-Length": chunkSize,
-        "Content-Type": contentType
+        "Content-Type": contentType,
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin"
       })
 
       ;(getObj.Body as Readable).pipe(res)
     } else {
-      // Full file
       const getObj = await s3.send(new GetObjectCommand(params))
 
       res.writeHead(200, {
         "Content-Length": fileSize,
         "Content-Type": contentType,
-        "Accept-Ranges": "bytes"
+        "Accept-Ranges": "bytes",
+        "Access-Control-Allow-Origin": "*",
+        "Cross-Origin-Resource-Policy": "cross-origin"
       })
 
       ;(getObj.Body as Readable).pipe(res)
