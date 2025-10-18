@@ -13,6 +13,8 @@ export async function initDb(
   const { db_host, db_proxy_url, db_username, db_password, db_name, db_port } =
     secrets;
 
+  //console.log(secrets)
+
   const dbUrl = environmnet === "production" ? db_proxy_url : db_host;
 
   db = knex({
@@ -35,4 +37,4 @@ export function getDb(): Knex {
     throw new Error("Database has not been initialized. Call initDb() first.");
   }
   return db;
-}
+}//bump
