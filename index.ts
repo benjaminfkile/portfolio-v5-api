@@ -21,13 +21,6 @@ async function start() {
 
     const environemt = secrets.node_env || ("local" as TNodeEnviromnent);
 
-    console.log("**************************************");
-    console.log("**************************************");
-    console.log("environment", environemt);
-    console.log("secrets", secrets);
-    console.log("**************************************");
-    console.log("**************************************");
-
     const morganOption = environemt === "production" ? "tiny" : "common";
     app.use(morgan(morganOption));
 
