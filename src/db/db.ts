@@ -15,6 +15,8 @@ export async function initDb(
 
   const dbUrl = environmnet === "production" ? db_proxy_url : db_host;
 
+  console.log("dbUrl", dbUrl)
+
   db = knex({
     client: "pg",
     connection: {
