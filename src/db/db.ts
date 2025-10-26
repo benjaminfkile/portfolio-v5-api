@@ -37,4 +37,4 @@ export function getDb(): Knex {
     throw new Error("Database has not been initialized. Call initDb() first.");
   }
   return db;
-}//bump
+}
