@@ -19,8 +19,10 @@ async function start() {
     const secrets: IAPISecrets = await getAppSecrets();
     app.set("secrets", secrets);
 
-    const environemt = secrets.node_env || ("local" as TNodeEnviromnent);
-
+    const environemt =
+      process.env.IS_LOCAL === "true"
+        ? "local"
+        : secrets.node_env || ("local" as TNodeEnviromnent);
     const morganOption = environemt === "production" ? "tiny" : "common";
     app.use(morgan(morganOption));
 

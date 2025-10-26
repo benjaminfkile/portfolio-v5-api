@@ -15,7 +15,7 @@ export async function initDb(
 
   const dbUrl = environmnet === "production" ? db_proxy_url : db_host;
 
-  console.log("dbUrl", dbUrl)
+  console.log("dbUrl", dbUrl);
 
   db = knex({
     client: "pg",
@@ -28,6 +28,22 @@ export async function initDb(
       ssl: { rejectUnauthorized: false },
     },
   });
+
+  console.info("\n************************************");
+  console.info("dbUrl", dbUrl);
+  console.info("************************************\n");
+
+  try {
+    await db.raw("SELECT 1+1 AS result");
+    console.info("\n************************************");
+    console.info("Database connection successful");
+    console.info("************************************\n");
+  } catch (err) {
+    console.info("\n************************************");
+    console.error("Database connection failed:", err);
+    console.info("************************************\n");
+    process.exit(1);
+  }
 
   return db;
 }
