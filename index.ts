@@ -24,7 +24,7 @@ async function start() {
     const morganOption = environemt === "production" ? "tiny" : "common";
     app.use(morgan(morganOption));
 
-    const port = parseInt(secrets.port) || 3002;
+    const port = parseInt(secrets.port) || 3001;
     const server = http.createServer({}, app);
 
     await initDb(secrets, environemt);
