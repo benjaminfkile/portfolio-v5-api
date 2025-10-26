@@ -17,6 +17,17 @@ export interface IAPISecrets {
   s3_bucket_name: string
 }
 
+export interface IDBHealth {
+  connected: boolean;
+  connectionUsesProxy: boolean;
+  logs?: {
+    messages: string[];
+    host?: string;
+    timestamp: string;
+    error?: string;
+  };
+}
+
 export interface IContentResponse {
   about: string;
   portfolioItems: IPortfolioItem[];

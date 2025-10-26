@@ -1,6 +1,7 @@
 import knex, { Knex } from "knex";
 import { IAPISecrets } from "../interfaces";
 import { TNodeEnviromnent } from "../types";
+import health from "./health";
 
 let db: Knex | null = null;
 
@@ -15,8 +16,6 @@ export async function initDb(
 
   const dbUrl = environmnet === "production" ? db_proxy_url : db_host;
 
-  console.log("dbUrl", dbUrl);
-
   db = knex({
     client: "pg",
     connection: {
@@ -29,21 +28,9 @@ export async function initDb(
     },
   });
 
-  console.info("\n************************************");
-  console.info("dbUrl", dbUrl);
-  console.info("************************************\n");
+  const dbHealth = await health.getDBConnectionHealth(db, true);
 
-  try {
-    await db.raw("SELECT 1+1 AS result");
-    console.info("\n************************************");
-    console.info("Database connection successful");
-    console.info("************************************\n");
-  } catch (err) {
-    console.info("\n************************************");
-    console.error("Database connection failed:", err);
-    console.info("************************************\n");
-    process.exit(1);
-  }
+  console.log(dbHealth.logs);
 
   return db;
 }

@@ -2,6 +2,7 @@ import express, { Express, NextFunction, Request, Response } from "express";
 import morgan from "morgan";
 import cors from "cors";
 //import helmet from "helmet";
+import healthRouter from "./routers/healthRouter";
 import contentRouter from "./routers/contentRouter";
 import mediaRouter from "./routers/mediaRouter";
 
@@ -16,6 +17,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send("portfolio-api");
 });
 
+app.use("/api/health", healthRouter)
 app.use("/api/portfolio-content", contentRouter);
 app.use("/api/media", mediaRouter)
 
@@ -32,4 +34,4 @@ app.use(function errorHandler(
   res.render("error", { error: err });
 });
 
-export default app;//bump
+export default app;
