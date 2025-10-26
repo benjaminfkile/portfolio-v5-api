@@ -19,7 +19,7 @@ export async function initDb(
 
   console.log("**************************************");
   console.log("**************************************");
-  console.log("secrets", secrets);
+  console.log("dbUrl", dbUrl);
   console.log("**************************************");
   console.log("**************************************");
 
