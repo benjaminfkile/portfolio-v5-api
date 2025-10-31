@@ -5,21 +5,22 @@ import cors from "cors";
 import healthRouter from "./routers/healthRouter";
 import contentRouter from "./routers/contentRouter";
 import mediaRouter from "./routers/mediaRouter";
+import { isLocal } from "./utils/isLocal";
 
 const app: Express = express();
 
-app.use(morgan("common"));
-app.use(cors());
-//!! doesnt need helmet because the gateway api that runs on the same ec2 instance this does has it
-//app.use(helmet())
+if (isLocal()) {
+  app.use(morgan("dev"));
+  app.use(cors());
+}
 
 app.get("/", (req: Request, res: Response) => {
   res.send("portfolio-api");
 });
 
-app.use("/api/health", healthRouter)
+app.use("/api/health", healthRouter);
 app.use("/api/portfolio-content", contentRouter);
-app.use("/api/media", mediaRouter)
+app.use("/api/media", mediaRouter);
 
 app.use(function errorHandler(
   err: Error,
