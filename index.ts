@@ -1,11 +1,12 @@
 import dotenv from "dotenv";
 import http from "http";
 import { initDb } from "./src/db/db";
-import { getAppSecrets } from "./src/secrets";
-import { IAPISecrets } from "./src/interfaces";
+import { getAppSecrets } from "./src/aws/getAppSecrets";
+import { IAPISecrets, IDBSecrets } from "./src/interfaces";
 import app from "./src/app";
 import morgan from "morgan";
 import { TNodeEnviromnent } from "./src/types";
+import { getDBSecrets } from "./src/aws/getDBSecrets";
 
 dotenv.config();
 
@@ -16,20 +17,21 @@ process.on("uncaughtException", function (err) {
 
 async function start() {
   try {
-    const secrets: IAPISecrets = await getAppSecrets();
-    app.set("secrets", secrets);
+    const appSecrets: IAPISecrets = await getAppSecrets();
+    const dbSecrets: IDBSecrets = await getDBSecrets();
+    app.set("secrets", appSecrets);
 
     const environemt =
       process.env.IS_LOCAL === "true"
         ? "local"
-        : secrets.node_env || ("local" as TNodeEnviromnent);
+        : appSecrets.node_env || ("local" as TNodeEnviromnent);
     const morganOption = environemt === "production" ? "tiny" : "common";
     app.use(morgan(morganOption));
 
-    const port = parseInt(secrets.port) || 3001;
+    const port = parseInt(appSecrets.port) || 3001;
     const server = http.createServer({}, app);
 
-    await initDb(secrets, environemt);
+    await initDb(dbSecrets, appSecrets, environemt);
 
     process.on("SIGINT", () => {
       server?.close(() => {

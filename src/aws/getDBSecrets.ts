@@ -1,14 +1,15 @@
+
 import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager"
-import { IAPISecrets } from "./interfaces"
+import { IDBSecrets } from "../interfaces"
 
 // Fetch and parse secrets from AWS
-export async function getAppSecrets(): Promise<IAPISecrets> {
+export async function getDBSecrets(): Promise<IDBSecrets> {
   const client = new SecretsManagerClient({
     region: process.env.AWS_REGION
   })
 
   const command = new GetSecretValueCommand({
-    SecretId: process.env.AWS_SECRET_ARN
+    SecretId: process.env.AWS_DB_SECRET_ARN
   })
 
   const response = await client.send(command)
@@ -17,5 +18,5 @@ export async function getAppSecrets(): Promise<IAPISecrets> {
     throw new Error("SecretString is empty in Secrets Manager response")
   }
 
-  return JSON.parse(response.SecretString) as IAPISecrets
+  return JSON.parse(response.SecretString) as IDBSecrets
 }

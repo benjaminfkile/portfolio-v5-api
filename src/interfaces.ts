@@ -17,6 +17,16 @@ export interface IAPISecrets {
   s3_bucket_name: string
 }
 
+export interface IDBSecrets {
+  username: string
+  password: string
+  engine: "postgres"
+  host: string
+  proxy_url: string
+  port: 5432
+  dbInstanceIdentifier: string
+}
+
 export interface IDBHealth {
   connected: boolean;
   connectionUsesProxy: boolean;
