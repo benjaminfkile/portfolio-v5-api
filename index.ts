@@ -22,10 +22,10 @@ async function start() {
     app.set("secrets", appSecrets);
 
     console.log("***********************************");
-    appSecrets;
+    console.log(appSecrets);
     console.log("***********************************");
     console.log("***********************************");
-    dbSecrets;
+    console.log(dbSecrets)
     console.log("***********************************");
 
     const environemt =
