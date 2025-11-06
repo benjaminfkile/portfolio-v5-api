@@ -21,6 +21,13 @@ async function start() {
     const dbSecrets: IDBSecrets = await getDBSecrets();
     app.set("secrets", appSecrets);
 
+    console.log("***********************************");
+    appSecrets;
+    console.log("***********************************");
+    console.log("***********************************");
+    dbSecrets;
+    console.log("***********************************");
+
     const environemt =
       process.env.IS_LOCAL === "true"
         ? "local"
