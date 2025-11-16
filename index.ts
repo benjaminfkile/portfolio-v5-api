@@ -19,14 +19,8 @@ async function start() {
   try {
     const appSecrets: IAPISecrets = await getAppSecrets();
     const dbSecrets: IDBSecrets = await getDBSecrets();
+    
     app.set("secrets", appSecrets);
-
-    console.log("***********************************");
-    console.log(appSecrets);
-    console.log("***********************************");
-    console.log("***********************************");
-    console.log(dbSecrets)
-    console.log("***********************************");
 
     const environemt =
       process.env.IS_LOCAL === "true"
