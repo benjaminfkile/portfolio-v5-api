@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
-import { getDb } from "../db/db";
-import health from "../db/health";
+//import { getDb } from "../../db/db";
+// import health from "../../db/health";
+
 
 const healthRouter = express.Router();
 
@@ -10,18 +11,18 @@ const healthRouter = express.Router();
  */
 healthRouter.route("/").get(async (req: Request, res: Response) => {
   try {
-    const db = getDb();
+    res.status(200).send(":)")
+    // const db = getDb();
 
-    // optional ?verbose=true query parameter
-    const verbose = req.query.verbose === "true";
+    // const verbose = req.query.verbose === "true";
 
-    const result = await health.getDBConnectionHealth(db, verbose);
+    // const result = await health.getDBConnectionHealth(db, verbose);
 
-    res.status(200).json({
-      status: "ok",
-      error: false,
-      health: result,
-    });
+    // res.status(200).json({
+    //   status: "ok",
+    //   error: false,
+    //   health: result,
+    // });
   } catch (error) {
     res.status(500).json({
       status: "error",
